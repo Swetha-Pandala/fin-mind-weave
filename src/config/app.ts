@@ -19,7 +19,7 @@ export const appConfig = {
   retrieval: { topK: 4, minScore: 0.12, chunkSizeTokens: 220 },
   // Placeholder per-1K-token blended price used for cost estimates.
   costPer1kTokensUsd: 0.004,
-  storageKey: "mafip.runs.v1",
+  storageKey: "mafip.runs.v2",
 } as const;
 
 export const SUGGESTED_PROMPTS = [

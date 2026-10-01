@@ -1,29 +1,23 @@
-# Welcome to your Lovable project
+# Multi-Agent Financial Intelligence Platform
 
-This project was built with [Lovable](https://lovable.dev).
+A fresh portfolio implementation by **Swetha Pandala** demonstrating multi-agent orchestration, RAG with grounded citations, structured financial analytics, explainable risk assessment and run-level observability. **All data is synthetic.** Not financial advice.
 
-## Build with Lovable
+## Agents
+Supervisor/Router → Retrieval → Transaction Analyst → Risk & Compliance → Report Writer (`src/services/orchestrator.ts`).
 
-Open your project in the [Lovable editor](https://lovable.dev) and keep building.
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: connect the project to GitHub and every change made in Lovable is committed straight to your repository.
-- **Full ownership**: this code is yours. Push to your repository and your changes sync back into Lovable, ready for your next prompt.
-
-## Development
-
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
-
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
+## Run
+```bash
+bun install
+bun run dev
 ```
+Works out of the box in deterministic **DEMO MODE** — no API keys. See `.env.example` to configure OpenAI, Anthropic or AWS Bedrock via `src/services/providers.ts` (keys are server-side only).
 
-## Built with
-
-- TanStack Start
-- TypeScript
-- React
-- Tailwind CSS
+## Structure
+```
+src/config     centralized config
+src/domain     typed interfaces (Transaction, KnowledgeDocument, Citation, AgentRun, ...)
+src/data       synthetic seed transactions & policy documents
+src/services   orchestrator, retrieval, analytics, risk, reporting, providers, run-store
+src/components app shell & shared widgets
+src/routes     dashboard, assistant, transactions, knowledge, reports, observability, architecture
+```
