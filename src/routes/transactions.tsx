@@ -159,8 +159,8 @@ function TransactionsPage() {
               <tbody className="divide-y divide-border">
                 {rows.map((t) => (
                   <tr key={t.id} tabIndex={0} onClick={() => setSelected(t)} onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), setSelected(t))} className="cursor-pointer hover:bg-muted/40 focus-visible:bg-muted/60 focus-visible:outline-none">
-                    <td className="px-3 py-2 font-mono text-xs text-muted-foreground">{t.id}</td>
-                    <td className="tabular px-3 py-2">{t.date}</td>
+                    <td className="whitespace-nowrap px-3 py-2 font-mono text-xs text-muted-foreground">{t.id}</td>
+                    <td className="tabular whitespace-nowrap px-3 py-2">{t.date}</td>
                     <td className="px-3 py-2 font-medium">{t.merchant}</td>
                     <td className="px-3 py-2 text-muted-foreground">{t.category}</td>
                     <td className={`tabular px-3 py-2 text-right ${t.type === "credit" ? "text-success" : ""}`}>{t.type === "credit" ? "+" : "−"}{fmtUSD(t.amount, 2)}</td>
