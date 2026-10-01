@@ -13,7 +13,7 @@ export interface Transaction {
   status: TxStatus;
   riskScore: number; // 0-100
   anomaly: boolean;
-  anomalyReason?: string;
+  anomalyReason?: string | undefined;
   description: string;
 }
 
@@ -94,7 +94,7 @@ export interface StructuredResponse {
   risk: RiskAssessment;
   nextSteps: string[];
   citations: Citation[];
-  groundingNote?: string;
+  groundingNote?: string | undefined;
 }
 
 export interface EvaluationMetric {
@@ -117,8 +117,8 @@ export interface AgentRun {
   response: StructuredResponse;
   metrics: EvaluationMetric;
   status: "success" | "failed";
-  failureReason?: string;
-  relatedTxId?: string;
+  failureReason?: string | undefined;
+  relatedTxId?: string | undefined;
 }
 
 export interface ReportChart {
@@ -126,7 +126,7 @@ export interface ReportChart {
   kind: "bar" | "line";
   data: { name: string; value: number; value2?: number }[];
   valueLabel: string;
-  value2Label?: string;
+  value2Label?: string | undefined;
 }
 
 export interface Report {

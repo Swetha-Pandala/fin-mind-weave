@@ -3,7 +3,7 @@
 
 export type ProviderId = "demo" | "openai" | "anthropic" | "bedrock";
 
-const envProvider = (import.meta.env.VITE_AI_PROVIDER as string | undefined)?.toLowerCase();
+const envProvider = (import.meta.env["VITE_AI_PROVIDER"] as string | undefined)?.toLowerCase();
 
 export const appConfig = {
   name: "Multi-Agent Financial Intelligence Platform",

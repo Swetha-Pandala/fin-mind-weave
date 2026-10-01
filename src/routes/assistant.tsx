@@ -12,9 +12,9 @@ import { runAgents } from "@/services/orchestrator";
 import { addRun } from "@/services/run-store";
 
 export const Route = createFileRoute("/assistant")({
-  validateSearch: (s: Record<string, unknown>): { q?: string; tx?: string } => ({
-    q: typeof s.q === "string" ? s.q : undefined,
-    tx: typeof s.tx === "string" ? s.tx : undefined,
+  validateSearch: (s: Record<string, unknown>): { q?: string | undefined; tx?: string | undefined } => ({
+    q: typeof s["q"] === "string" ? s["q"] : undefined,
+    tx: typeof s["tx"] === "string" ? s["tx"] : undefined,
   }),
   head: () => ({
     meta: [

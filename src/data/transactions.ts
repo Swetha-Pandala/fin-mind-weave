@@ -20,7 +20,7 @@ interface Draft {
   amount: number;
   type?: TxType;
   status?: TxStatus;
-  anomalyReason?: string;
+  anomalyReason?: string | undefined;
   risk?: number;
   description?: string;
 }
@@ -31,7 +31,7 @@ const d = (m: string, day: number) => `${m}-${String(day).padStart(2, "0")}`;
 function build(): Transaction[] {
   const rnd = mulberry32(20260901);
   const jitter = (base: number, pct = 0.06) => Math.round(base * (1 + (rnd() * 2 - 1) * pct) * 100) / 100;
-  const pick = <T,>(arr: readonly T[]) => arr[Math.floor(rnd() * arr.length)];
+  const pick = <T,>(arr: readonly T[]) => arr[Math.floor(rnd() * arr.length)]!;
   const drafts: Draft[] = [];
 
   MONTHS.forEach((m, mi) => {
@@ -52,7 +52,7 @@ function build(): Transaction[] {
     drafts.push({ date: d(m, 12), merchant: "Salesforce", category: "Software", amount: 12500, description: "CRM enterprise licenses" });
     drafts.push({ date: d(m, 14), merchant: "GitHub", category: "Software", amount: 2100, description: "Enterprise seats" });
     // Cloud (September spike is deliberate)
-    const aws = [38200, 40900, 63150][mi];
+    const aws = [38200, 40900, 63150][mi]!;
     drafts.push({
       date: d(m, 2), merchant: "Amazon Web Services", category: "Cloud Spend", amount: aws,
       description: "Monthly cloud infrastructure",
@@ -79,12 +79,12 @@ function build(): Transaction[] {
       drafts.push({ date: d(m, 2 + i * 7 + Math.floor(rnd() * 3)), merchant: pick(officeMerchants), category: "Office Expenses", amount: jitter(420, 0.6), description: "Office supplies & catering" });
     }
     // Transfers
-    drafts.push({ date: d(m, 27), merchant: "Treasury Sweep – Reserve", category: "Transfers", amount: [250000, 220000, 120000][mi], description: "Internal sweep to reserve account" });
+    drafts.push({ date: d(m, 27), merchant: "Treasury Sweep – Reserve", category: "Transfers", amount: [250000, 220000, 120000][mi]!, description: "Internal sweep to reserve account" });
     drafts.push({ date: d(m, 20), merchant: "Intercompany – Holdings LLC", category: "Transfers", amount: 75000, type: "credit", description: "Intercompany funding" });
     // Customer receipts (September inflows soften deliberately)
-    const receipts = [[262000, 241000, 198000], [255000, 236000, 172000], [248000, 229000, 165000]];
+    const receipts: number[][] = [[262000, 241000, 198000], [255000, 236000, 172000], [248000, 229000, 165000]];
     ["Acme Corp", "Globex Industries", "Initech Partners"].forEach((client, ci) => {
-      drafts.push({ date: d(m, 8 + ci * 7), merchant: `Client Receipt – ${client}`, category: "Customer Receipts", amount: receipts[ci][mi], type: "credit", description: "Customer invoice payment" });
+      drafts.push({ date: d(m, 8 + ci * 7), merchant: `Client Receipt – ${client}`, category: "Customer Receipts", amount: receipts[ci]![mi]!, type: "credit", description: "Customer invoice payment" });
     });
     // Refunds
     drafts.push({ date: d(m, 13), merchant: "Delta Air Lines", category: "Refunds", amount: jitter(410, 0.2), type: "credit", description: "Cancelled flight refund" });
