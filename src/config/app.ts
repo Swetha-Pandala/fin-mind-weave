@@ -21,3 +21,12 @@ export const appConfig = {
   costPer1kTokensUsd: 0.004,
   storageKey: "mafip.runs.v1",
 } as const;
+
+export const SUGGESTED_PROMPTS = [
+  "Which transactions look unusual this month?",
+  "What were the largest expense changes by category?",
+  "Does the vendor payment policy require approval for this transaction?",
+  "Summarize current cash-flow risk.",
+  "Which merchants changed the most month over month?",
+  "Generate an executive anomaly report.",
+] as const;
