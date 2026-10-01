@@ -10,7 +10,7 @@ const PREV = appConfig.previousMonth;
 export function buildReports(): Report[] {
   const an = anomalies(CUR);
   const cf = cashFlowByMonth();
-  const last = cf[cf.length - 1];
+  const last = cf[cf.length - 1]!;
   const cats = categoryChanges(PREV, CUR);
   const merch = merchantChanges(PREV, CUR);
   const period = monthLabel(CUR);
@@ -25,9 +25,9 @@ export function buildReports(): Report[] {
       headline: `${period}: net operating cash flow ${fmtUSD(last.net)}, ${an.length} anomalies flagged, overall risk ${risk.level}.`,
       findings: [
         `Operating outflows were ${fmtUSD(last.outflow)} against inflows of ${fmtUSD(last.inflow)}.`,
-        `Largest category movement: ${cats[0].name} (${fmtPct(cats[0].pct)}).`,
+        `Largest category movement: ${cats[0]!.name} (${fmtPct(cats[0]!.pct)}).`,
         `${an.filter((t) => t.riskScore >= 70).length} high-risk transactions require expedited review.`,
-        `Customer receipts declined ${fmtPct(last.inflow / cf[cf.length - 2].inflow - 1)} month over month.`,
+        `Customer receipts declined ${fmtPct(last.inflow / cf[cf.length - 2]!.inflow - 1)} month over month.`,
       ],
       evidence: [
         { label: "Inflows", value: fmtUSD(last.inflow) },

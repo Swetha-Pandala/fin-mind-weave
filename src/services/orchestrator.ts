@@ -101,7 +101,7 @@ function analyze(intent: Intent, prompt: string, tx?: Transaction): AnalystOutpu
       const top = ch.slice(0, 5);
       return {
         scope: cur,
-        summary: `The largest category change from ${monthLabel(PREV)} to ${monthLabel(CUR)} was ${top[0].name} (${fmtUSD(top[0].delta)}, ${fmtPct(top[0].pct)}).`,
+        summary: `The largest category change from ${monthLabel(PREV)} to ${monthLabel(CUR)} was ${top[0]!.name} (${fmtUSD(top[0]!.delta)}, ${fmtPct(top[0]!.pct)}).`,
         findings: top.map((c) => `${c.name}: ${fmtUSD(c.prev)} → ${fmtUSD(c.cur)} (${c.delta >= 0 ? "+" : ""}${fmtUSD(c.delta)}, ${fmtPct(c.pct)}).`),
         evidence: top.slice(0, 4).map((c) => ({ label: c.name, value: fmtPct(c.pct) })),
         extraIndicators: top.filter((c) => c.pct > 0.4 && c.prev > 0).map((c) => `${c.name} increased ${fmtPct(c.pct)} month over month.`),
@@ -111,7 +111,7 @@ function analyze(intent: Intent, prompt: string, tx?: Transaction): AnalystOutpu
       const ch = merchantChanges(PREV, CUR).slice(0, 6);
       return {
         scope: cur,
-        summary: `${ch.filter((c) => c.isNew).length} merchants are new in ${monthLabel(CUR)}; the largest change was ${ch[0].name} (${ch[0].delta >= 0 ? "+" : ""}${fmtUSD(ch[0].delta)}).`,
+        summary: `${ch.filter((c) => c.isNew).length} merchants are new in ${monthLabel(CUR)}; the largest change was ${ch[0]!.name} (${ch[0]!.delta >= 0 ? "+" : ""}${fmtUSD(ch[0]!.delta)}).`,
         findings: ch.map((c) => `${c.name}: ${fmtUSD(c.prev)} → ${fmtUSD(c.cur)}${c.isNew ? " (new merchant)" : ""}.`),
         evidence: ch.slice(0, 4).map((c) => ({ label: c.name, value: `${c.delta >= 0 ? "+" : ""}${fmtUSD(c.delta)}` })),
         extraIndicators: ch.filter((c) => c.isNew && c.cur > 10000).map((c) => `New merchant ${c.name} received ${fmtUSD(c.cur)}.`),
@@ -119,8 +119,8 @@ function analyze(intent: Intent, prompt: string, tx?: Transaction): AnalystOutpu
     }
     case "cashflow_risk": {
       const cf = cashFlowByMonth();
-      const last = cf[cf.length - 1];
-      const prior = cf[cf.length - 2];
+      const last = cf[cf.length - 1]!;
+      const prior = cf[cf.length - 2]!;
       const ratio = last.inflow ? last.outflow / last.inflow - 1 : 1;
       const extra: string[] = [];
       if (last.net < 0) extra.push(`Net operating cash flow in ${last.name} is negative (${fmtUSD(last.net)}).`);
@@ -178,13 +178,13 @@ function analyze(intent: Intent, prompt: string, tx?: Transaction): AnalystOutpu
     case "executive_report": {
       const an = anomalies(CUR);
       const cf = cashFlowByMonth();
-      const last = cf[cf.length - 1];
-      const ch = categoryChanges(PREV, CUR)[0];
+      const last = cf[cf.length - 1]!;
+      const ch = categoryChanges(PREV, CUR)[0]!;
       return {
         scope: cur,
         summary: `${monthLabel(CUR)} shows ${an.length} anomalous transactions (${fmtUSD(an.reduce((s, t) => s + t.amount, 0))}), net operating cash flow of ${fmtUSD(last.net)}, and the largest category movement in ${ch.name}.`,
         findings: [
-          `${an.filter((t) => t.riskScore >= 70).length} high-risk items require review within one business day, led by ${an[0].merchant} (${fmtUSD(an[0].amount)}).`,
+          `${an.filter((t) => t.riskScore >= 70).length} high-risk items require review within one business day, led by ${an[0]!.merchant} (${fmtUSD(an[0]!.amount)}).`,
           `Possible duplicate and split-payment patterns detected (Northwind Logistics, Brightline Consulting).`,
           `Net operating cash flow: ${fmtUSD(last.net)} in ${last.name}.`,
           `${ch.name} changed ${fmtPct(ch.pct)} month over month.`,
@@ -194,7 +194,7 @@ function analyze(intent: Intent, prompt: string, tx?: Transaction): AnalystOutpu
           { label: "Transactions in period", value: String(cur.length) },
           { label: "Anomalies", value: String(an.length) },
           { label: "Net cash flow", value: fmtUSD(last.net) },
-          { label: "Top risk score", value: String(an[0].riskScore) },
+          { label: "Top risk score", value: String(an[0]!.riskScore) },
         ],
         extraIndicators: last.net < 0 ? [`Negative net operating cash flow in ${last.name}.`] : [],
       };
@@ -222,7 +222,7 @@ function write(intent: Intent, prompt: string, citations: Citation[], analysis: 
       };
     }
     return {
-      summary: `Based on ${top.length} retrieved passage(s), the most relevant guidance comes from ${top[0].docTitle} (${top[0].sectionLabel}).`,
+      summary: `Based on ${top.length} retrieved passage(s), the most relevant guidance comes from ${top[0]!.docTitle} (${top[0]!.sectionLabel}).`,
       keyFindings: policyLines,
       evidence: top.map((c) => ({ label: `${c.docTitle} ${c.sectionLabel}`, value: `relevance ${c.score.toFixed(2)}` })),
       risk: { level: "Low", score: 0, indicators: ["Not assessed — knowledge-only query."] },
@@ -233,7 +233,7 @@ function write(intent: Intent, prompt: string, citations: Citation[], analysis: 
 
   const a = analysis!;
   const keyFindings = [...a.findings];
-  if (top.length) keyFindings.push(`Policy context: ${top[0].excerpt} ${cite(top[0])}`);
+  if (top.length) keyFindings.push(`Policy context: ${top[0]!.excerpt} ${cite(top[0]!)}`);
 
   if (intent === "anomaly_detection" || intent === "executive_report") {
     nextSteps.push("Route high-risk items (score ≥70) to Financial Crimes Compliance within one business day.");
@@ -264,7 +264,7 @@ function write(intent: Intent, prompt: string, citations: Citation[], analysis: 
 
 // ---------- Orchestration ----------
 export interface RunOptions {
-  txId?: string;
+  txId?: string | undefined;
   simulateDelay?: boolean;
   onStep?: (step: AgentStep, path: AgentName[]) => void;
   createdAt?: string;
@@ -318,7 +318,7 @@ export async function runAgents(prompt: string, opts: RunOptions = {}): Promise<
     await emit({
       agent: "Retrieval", action: "Search knowledge base", status: "success",
       latencyMs: latencyFor(q, 180, 160),
-      detail: citations.length ? `Retrieved ${citations.length} passage(s); top: ${citations[0].docTitle} ${citations[0].sectionLabel} (${citations[0].score.toFixed(2)}).` : "No passages above relevance threshold.",
+      detail: citations.length ? `Retrieved ${citations.length} passage(s); top: ${citations[0]!.docTitle} ${citations[0]!.sectionLabel} (${citations[0]!.score.toFixed(2)}).` : "No passages above relevance threshold.",
       toolCalls: [
         { name: "embed_query", status: "ok", summary: `${q.split(/\s+/).length} terms` },
         { name: "vector_search", status: citations.length ? "ok" : "empty", summary: `top_k=${appConfig.retrieval.topK}, hits=${citations.length}` },

@@ -23,7 +23,7 @@ export const Route = createFileRoute("/knowledge")({
 
 function KnowledgePage() {
   const [filter, setFilter] = useState("");
-  const [activeId, setActiveId] = useState(knowledgeDocuments[0].id);
+  const [activeId, setActiveId] = useState(knowledgeDocuments[0]!.id);
   const [query, setQuery] = useState("approval required for vendor payment over threshold");
   const [submitted, setSubmitted] = useState(query);
   const stats = indexStats();
