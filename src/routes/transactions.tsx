@@ -133,7 +133,7 @@ function TransactionsPage() {
             </Select>
             <Select value={status} onValueChange={setStatus}>
               <SelectTrigger className="sm:w-36" aria-label="Status"><SelectValue /></SelectTrigger>
-              <SelectContent>{["all", "posted", "pending", "flagged"].map((s) => <SelectItem key={s} value={s}>{s === "all" ? "All statuses" : s[0].toUpperCase() + s.slice(1)}</SelectItem>)}</SelectContent>
+              <SelectContent>{["all", "posted", "pending", "flagged"].map((s) => <SelectItem key={s} value={s}>{s === "all" ? "All statuses" : s.charAt(0).toUpperCase() + s.slice(1)}</SelectItem>)}</SelectContent>
             </Select>
             <Button variant={onlyAnomalies ? "default" : "outline"} onClick={() => setOnlyAnomalies((v) => !v)} aria-pressed={onlyAnomalies}>Anomalies only</Button>
           </div>
