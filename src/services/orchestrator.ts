@@ -255,7 +255,10 @@ function write(intent: Intent, prompt: string, citations: Citation[], analysis: 
     summary: a.summary,
     keyFindings,
     evidence: a.evidence,
-    risk: risk ?? { level: "Low", score: 0, indicators: ["Risk agent not invoked for this workflow."] },
+    risk: risk ?? (() => {
+      const score = Math.min(70, 20 + a.extraIndicators.length * 15);
+      return { level: levelFor(score), score, indicators: a.extraIndicators.length ? a.extraIndicators : ["No threshold breaches detected in the analyzed trends."] };
+    })(),
     nextSteps,
     citations: top,
     groundingNote: top.length ? undefined : "No supporting policy passage was found; findings rely on transaction data only.",
