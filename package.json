@@ -1,5 +1,6 @@
 {
-  "name": "tanstack_start_ts",
+  "name": "multi-agent-financial-intelligence-platform",
+  "description": "Multi-agent orchestration + RAG for grounded financial operations analysis. Demo mode runs with no API keys.",
   "private": true,
   "sideEffects": false,
   "type": "module",
